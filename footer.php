@@ -21,21 +21,7 @@
 	 */
 	get_sidebar( 'footer' );
 ?>
-
-			<div id="site-info">
-				<a href="<?php echo home_url( '/' ) ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-					<?php bloginfo( 'name' ); ?>
-				</a>
-			</div><!-- #site-info -->
-
-			<div id="site-generator">
-				<?php do_action( 'twentyten_credits' ); ?>
-				<a href="<?php echo esc_url( __('http://wordpress.org/', 'twentyten') ); ?>"
-						title="<?php esc_attr_e('Semantic Personal Publishing Platform', 'twentyten'); ?>" rel="generator">
-					<?php printf( __('Proudly powered by %s.', 'twentyten'), 'WordPress' ); ?>
-				</a>
-			</div><!-- #site-generator -->
-
+			<a href="http://pirata.cat">Pirates de Catalunya</a>. Contingut sota <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Llicència de Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a> 
 		</div><!-- #colophon -->
 	</footer><!-- #footer -->
 

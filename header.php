@@ -38,6 +38,7 @@
 
 	?></title>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
+<link href="http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" media="all" href="<?php bloginfo( 'stylesheet_url' ); ?>" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 <?php
@@ -61,38 +62,46 @@
 <noscript><strong>JavaScript is required for this website to be displayed correctly. Please enable JavaScript before continuing...</strong></noscript>
 <![endif]-->
 
+<nav id="access" role="navigation">
+<?php /*  Allow screen readers / text browsers to skip the navigation menu and get right to the good stuff */ ?>
+	<div class="skip-link screen-reader-text"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentyten' ); ?>"><?php _e( 'Skip to content', 'twentyten' ); ?></a></div>
+	<ul class="menu">
+		<li class="no"><a href="<?php echo home_url( '/' ); ?>">Inici</a></li> 
+		<li><a href="http://pirata.cat/ca/ideari">Ideari</a></li> 
+		<!--li><a href="http://pirata.cat/bloc/?page_id=425">Programa electoral</a></li--> 
+		<li><a href="http://actua.pirata.cat">Activisme</a></li> 
+		<li><a href="http://pirata.cat/bloc">Bloc</a></li> 
+		<li><a href="http://pirata.cat/ca/calendari">Calendari</a></li> 
+		<li><a href="http://pirata.cat/ca/trobades">Trobades</a></li> 
+		<li><a href="http://pirata.cat/ca/contacte">Contacte</a></li> 
+	</ul>
+</nav><!-- #access -->
+<nav id="channels" role="navigation">
+<?php /*  Allow screen readers / text browsers to skip the navigation menu and get right to the good stuff */ ?>
+	<div class="skip-link screen-reader-text"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentyten' ); ?>"><?php _e( 'Skip to content', 'twentyten' ); ?></a></div>
+	<ul class="menu">
+		<li class="no hl">Troba'ns a:</li> 
+		<li><a href="https://facebook.com/pirata.cat">Facebook</a></li> 
+		<li><a href="https://twitter.com/partit_pirata">Twitter</a></li> 
+		<li><a href="http://identi.ca/group/piratesdecatalunya">Identi.ca</a></li> 
+		<li><a href="https://n-1.cc/pg/groups/42696/piratacat/">N-1</a></li> 
+		<li><a href="http://www.flickr.com/groups/piratacat/">Flickr</a></li> 
+		<li><a href="http://youtube.com/PiratesDeCatalunyaTV">Youtube</a></li> 
+		<li><a href="http://webchat.freenode.net/?channels=pirata.cat">Xat</a></li> 
+		<li><a href="https://xifrat.pirata.cat/gestors/mailman/listinfo">Llistes de correu</a></li>
+	</ul>
+</nav><!-- #access -->
 <div id="wrapper" class="hfeed">
 	<header>
 		<section id="masthead">
 			<div id="branding" role="banner">
-				<hgroup>
-					<?php $heading_tag = ( is_home() || is_front_page() ) ? 'h1' : 'div'; ?>
-					<<?php echo $heading_tag; ?> id="site-title">
-					<span>
-						<a href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
-					</span>
-					</<?php echo $heading_tag; ?>>
-					<h2 id="site-description"><?php bloginfo( 'description' ); ?></h2>
-				</hgroup>
-				<?php
-					// Check if this is a post or page, if it has a thumbnail, and if it's a big one
-					if ( is_singular() &&
-							has_post_thumbnail( $post->ID ) &&
-							( /* $src, $width, $height */ $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'post-thumbnail' ) ) &&
-							$image[1] >= HEADER_IMAGE_WIDTH ) :
-						// Houston, we have a new header image!
-						echo get_the_post_thumbnail( $post->ID, 'post-thumbnail' );
-					else : ?>
-						<img src="<?php header_image(); ?>" width="<?php echo HEADER_IMAGE_WIDTH; ?>" height="<?php echo HEADER_IMAGE_HEIGHT; ?>" alt="" />
-					<?php endif; ?>
+				<a href="<?php echo home_url( '/' ); ?>"><img src="http://pirata.cat/media/img/logo.png"></a>
 			</div><!-- #branding -->
-
-			<nav id="access" role="navigation">
-			  <?php /*  Allow screen readers / text browsers to skip the navigation menu and get right to the good stuff */ ?>
-				<div class="skip-link screen-reader-text"><a href="#content" title="<?php esc_attr_e( 'Skip to content', 'twentyten' ); ?>"><?php _e( 'Skip to content', 'twentyten' ); ?></a></div>
-				<?php /* Our navigation menu.  If one isn't filled out, wp_nav_menu falls back to wp_page_menu.  The menu assiged to the primary position is the one used.  If none is assigned, the menu with the lowest ID is used.  */ ?>
-				<?php wp_nav_menu( array( 'container_class' => 'menu-header', 'theme_location' => 'primary' ) ); ?>
-			</nav><!-- #access -->
+			<ul id="sub" class="bar"> 
+				<li class="no"><img src="http://pirata.cat/media/img/group.png"> <a href="https://xifrat.pirata.cat/ca/alta_afiliats">Afilia't (és gratuït)</a></li> 
+				<li><img src="http://pirata.cat/media/img/email_go.png"> <a href="https://xifrat.pirata.cat">Participa!</a></li> 
+				<li><img src="http://pirata.cat/media/img/money_add.png"> <a href="https://xifrat.pirata.cat/donacions">Donacions</a></li> 
+			</ul>
 		</section><!-- #masthead -->
 	</header><!-- #header -->
 
