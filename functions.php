@@ -77,9 +77,6 @@ function twentyten_setup() {
 	// This theme styles the visual editor with editor-style.css to match the theme style.
 	add_editor_style();
 
-	// Post Format support. You can also use the legacy "gallery" or "asides" (note the plural) categories.
-	add_theme_support( 'post-formats', array( 'aside', 'gallery' ) );
-
 	// This theme uses post thumbnails
 	add_theme_support( 'post-thumbnails' );
 
@@ -104,12 +101,9 @@ function twentyten_setup() {
 	add_custom_background();
 
 	// Your changeable header business starts here
-	if ( ! defined( 'HEADER_TEXTCOLOR' ) )
-		define( 'HEADER_TEXTCOLOR', '' );
-
+	define( 'HEADER_TEXTCOLOR', '' );
 	// No CSS, just IMG call. The %s is a placeholder for the theme template directory URI.
-	if ( ! defined( 'HEADER_IMAGE' ) )
-		define( 'HEADER_IMAGE', '%s/images/headers/path.jpg' );
+	define( 'HEADER_IMAGE', '%s/images/headers/path.jpg' );
 
 	// The height and width of your custom header. You can hook into the theme's own filters to change these values.
 	// Add a filter to twentyten_header_image_width and twentyten_header_image_height to change these values.
@@ -122,8 +116,7 @@ function twentyten_setup() {
 	set_post_thumbnail_size( HEADER_IMAGE_WIDTH, HEADER_IMAGE_HEIGHT, true );
 
 	// Don't support text inside the header image.
-	if ( ! defined( 'NO_HEADER_TEXT' ) )
-		define( 'NO_HEADER_TEXT', true );
+	define( 'NO_HEADER_TEXT', true );
 
 	// Add a way for the custom header to be styled in the admin panel that controls
 	// custom headers. See twentyten_admin_header_style(), below.
@@ -282,30 +275,15 @@ add_filter( 'get_the_excerpt', 'twentyten_custom_excerpt_more' );
 /**
  * Remove inline styles printed when the gallery shortcode is used.
  *
- * Galleries are styled by the theme in Twenty Ten's style.css. This is just
- * a simple filter call that tells WordPress to not use the default styles.
- *
- * @since Twenty Ten 1.2
- */
-add_filter( 'use_default_gallery_style', '__return_false' );
-
-/**
- * Deprecated way to remove inline styles printed when the gallery shortcode is used.
- *
- * This function is no longer needed or used. Use the use_default_gallery_style
- * filter instead, as seen above.
+ * Galleries are styled by the theme in Twenty Ten's style.css.
  *
  * @since Twenty Ten 1.0
- * @deprecated Deprecated in Twenty Ten 1.2 for WordPress 3.1
- *
  * @return string The gallery style filter, with the styles themselves removed.
  */
 function twentyten_remove_gallery_css( $css ) {
 	return preg_replace( "#<style type='text/css'>(.*?)</style>#s", '', $css );
 }
-// Backwards compatibility with WordPress 3.0.
-if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
-	add_filter( 'gallery_style', 'twentyten_remove_gallery_css' );
+add_filter( 'gallery_style', 'twentyten_remove_gallery_css' );
 
 if ( ! function_exists( 'twentyten_comment' ) ) :
 /**
@@ -330,7 +308,7 @@ function twentyten_comment( $comment, $args, $depth ) {
 			<?php printf( __( '%s <span class="says">says:</span>', 'twentyten' ), sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
 		</div><!-- .comment-author .vcard -->
 		<?php if ( $comment->comment_approved == '0' ) : ?>
-			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'twentyten' ); ?></em>
+			<em><?php _e( 'Your comment is awaiting moderation.', 'twentyten' ); ?></em>
 			<br />
 		<?php endif; ?>
 
@@ -354,7 +332,7 @@ function twentyten_comment( $comment, $args, $depth ) {
 		case 'trackback' :
 	?>
 	<li class="post pingback">
-		<p><?php _e( 'Pingback:', 'twentyten' ); ?> <?php comment_author_link(); ?><?php edit_comment_link( __( '(Edit)', 'twentyten' ), ' ' ); ?></p>
+		<p><?php _e( 'Pingback:', 'twentyten' ); ?> <?php comment_author_link(); ?><?php edit_comment_link( __('(Edit)', 'twentyten'), ' ' ); ?></p>
 	<?php
 			break;
 	endswitch;
@@ -446,20 +424,17 @@ add_action( 'widgets_init', 'twentyten_widgets_init' );
  * To override this in a child theme, remove the filter and optionally add your own
  * function tied to the widgets_init action hook.
  *
- * This function uses a filter (show_recent_comments_widget_style) new in WordPress 3.1
- * to remove the default style. Using Twenty Ten 1.2 in WordPress 3.0 will show the styles,
- * but they won't have any effect on the widget in default Twenty Ten styling.
- *
  * @since Twenty Ten 1.0
  */
 function twentyten_remove_recent_comments_style() {
-	add_filter( 'show_recent_comments_widget_style', '__return_false' );
+	global $wp_widget_factory;
+	remove_action( 'wp_head', array( $wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style' ) );
 }
 add_action( 'widgets_init', 'twentyten_remove_recent_comments_style' );
 
 if ( ! function_exists( 'twentyten_posted_on' ) ) :
 /**
- * Prints HTML with meta information for the current post-date/time and author.
+ * Prints HTML with meta information for the current post—date/time and author.
  *
  * @since Twenty Ten 1.0
  */
@@ -506,3 +481,141 @@ function twentyten_posted_in() {
 	);
 }
 endif;
+
+
+
+
+/**
+ * TwentyTen Five functions and definitions
+ *
+ * This additional code adds in HTML5 functionality to the TwentyTen theme.
+ * You will still require the orginal functions.php (above) which has not
+ * been altered.
+ *
+ * The code below overwrites or extends some of the TwentyTen functionality.
+ *
+ * For more information on see 
+ * http://www.smashingmagazine.com/2011/02/22/using-html5-to-transform-wordpress-twentyten-theme/
+ *
+ * and
+ * http://twentytenfive.com
+ *
+ * @package WordPress
+ * @subpackage Twenty_Ten_Five
+ * @since TwentyTen Five 1.0.1
+ */
+
+
+
+/**
+ * Modernizr.js
+ * 
+ * Load up modernizr.min.js using the WordPress wp_enqueue_script function
+ *
+ * @since TwentyTen Five 1.0.1
+ */
+ 
+ wp_enqueue_script( 'modernizr', get_bloginfo('template_directory').'/js/modernizr-1.6.min.js');
+
+
+/**
+ * The TwentyTen Five Caption shortcode.
+ * added by Richard Shepherd to include HTML5 goodness
+ *
+ * The supported attributes for the shortcode are 'id', 'align', 'width', and
+ * 'caption'.
+ *
+ * @since TwentyTen Five 1.0
+ */
+
+add_shortcode('wp_caption', 'twentyten_img_caption_shortcode');
+add_shortcode('caption', 'twentyten_img_caption_shortcode');
+
+function twentyten_img_caption_shortcode($attr, $content = null) {
+
+	extract(shortcode_atts(array(
+		'id'	=> '',
+		'align'	=> 'alignnone',
+		'width'	=> '',
+		'caption' => ''
+	), $attr));
+
+	if ( 1 > (int) $width || empty($caption) )
+		return $content;
+
+
+if ( $id ) $idtag = 'id="' . esc_attr($id) . '" ';
+
+  return '<figure ' . $idtag . 'aria-describedby="figcaption_' . $id . '" style="width: ' . (10 + (int) $width) . 'px">' 
+  . do_shortcode( $content ) . '<figcaption id="figcaption_' . $id . '">' . $caption . '</figcaption></figure>';
+}
+
+
+
+/**
+ * Prints HTML with meta information for the current post—date/time and author.
+ *
+ * @since TwentyTen Five 1.0
+ */
+function twentyten_posted_on() {
+		printf( __( 'Posted on %2$s by %3$s', 'twentyten' ),
+			'meta-prep meta-prep-author',
+			sprintf( '<a href="%1$s" rel="bookmark"><time datetime="%2$s" pubdate>%3$s</time></a>',
+			get_permalink(),
+			get_the_date('c'),
+			get_the_date()
+		),
+		sprintf( '<span class="author vcard"><a class="url fn n" href="%1$s" title="%2$s">%3$s</a></span>',
+			get_author_posts_url( get_the_author_meta( 'ID' ) ),
+			sprintf( esc_attr__( 'View all posts by %s', 'twentyten' ), get_the_author() ),
+			get_the_author()
+		)
+	);
+}
+
+
+
+/**
+ * Customise the TwentyTen Five comments fields with HTML5 form elements
+ *
+ *	Adds support for 	placeholder
+ *						required
+ *						type="email"
+ *						type="url"
+ *
+ * @since TwentyTen Five 1.0
+ */
+function twentytenfive_comments() {
+
+	$req = get_option('require_name_email');
+
+	$fields =  array(
+		'author' => '<p class="comment-form-author">' . '<label for="author">' . __( 'Name' ) . '</label> ' . ( $req ? '<span class="required">*</span>' : '' ) .
+		            '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30"' . $aria_req . ' placeholder = "What can we call you?"' . ( $req ? ' required' : '' ) . '/></p>',
+		            
+		'email'  => '<p class="comment-form-email"><label for="email">' . __( 'Email' ) . '</label> ' . ( $req ? '<span class="required">*</span>' : '' ) .
+		            '<input id="email" name="email" type="email" value="' . esc_attr(  $commenter['comment_author_email'] ) . '" size="30"' . $aria_req . ' placeholder="How can we reach you?"' . ( $req ? ' required' : '' ) . ' /></p>',
+		            
+		'url'    => '<p class="comment-form-url"><label for="url">' . __( 'Website' ) . '</label>' .
+		            '<input id="url" name="url" type="url" value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" placeholder="Have you got a website?" /></p>'
+
+	);
+	return $fields;
+}
+
+
+function twentytenfive_commentfield() {	
+
+	$commentArea = '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><textarea id="comment" name="comment" cols="45" rows="8" aria-required="true" required placeholder="What\'s on your mind?"	></textarea></p>';
+	
+	return $commentArea;
+
+}
+
+
+add_filter('comment_form_default_fields', 'twentytenfive_comments');
+add_filter('comment_form_field_comment', 'twentytenfive_commentfield');
+
+
+
+?>

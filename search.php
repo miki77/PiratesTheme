@@ -3,8 +3,8 @@
  * The template for displaying Search Results pages.
  *
  * @package WordPress
- * @subpackage Twenty_Ten
- * @since Twenty Ten 1.0
+ * @subpackage Twenty_Ten_Five 
+ * @since Twenty Ten Five 1.0
  */
 
 get_header(); ?>
@@ -22,13 +22,13 @@ get_header(); ?>
 				 get_template_part( 'loop', 'search' );
 				?>
 <?php else : ?>
-				<div id="post-0" class="post no-results not-found">
+				<article id="post-0" class="post no-results not-found">
 					<h2 class="entry-title"><?php _e( 'Nothing Found', 'twentyten' ); ?></h2>
 					<div class="entry-content">
 						<p><?php _e( 'Sorry, but nothing matched your search criteria. Please try again with some different keywords.', 'twentyten' ); ?></p>
 						<?php get_search_form(); ?>
 					</div><!-- .entry-content -->
-				</div><!-- #post-0 -->
+				</article><!-- #post-0 -->
 <?php endif; ?>
 			</div><!-- #content -->
 		</div><!-- #container -->
